@@ -3,7 +3,7 @@ from indicators import *
 from backtest import *
 
 symbol = 'BTC/USDT'
-symbol = 'ETH/USDT'
+# symbol = 'ETH/USDT'
 # symbol = 'TON/USDT'
 timeframe = '1h'
 timeframe = '1d'
@@ -16,6 +16,7 @@ end_date = '2023-12-31'
 
 start_date = '2020-01-01'
 end_date = '2026-12-31'
+# end_date = '2025-10-31'
 
 params = {
     'volatility_period': 20,

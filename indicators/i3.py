@@ -12,6 +12,7 @@ def calculate_indicators(df, params):
     
     # Определяем красные свечи (цена закрытия ниже цены открытия)
     df['is_red'] = df['close'] < df['open']
+    # print(df)
     
     return df
 
@@ -27,6 +28,7 @@ def generate_signals(df, params):
     # Проходим по всем свечам как в оригинальном бэктесте
     for i in range(volume_lookback, len(df) - 1):
         current = df.iloc[i]
+        print(current)
         
         # Проверяем условия для текущей свечи
         is_red = current['close'] < current['open']

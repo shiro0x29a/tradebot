@@ -112,8 +112,8 @@ def main():
     plt.grid(True)
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.savefig('backtest_2020.png', dpi=300, bbox_inches='tight')
-    print(f"\nГрафик сохранен как: backtest_2020.png")
+    # plt.savefig('backtest_2020.png', dpi=300, bbox_inches='tight')
+    # print(f"\nГрафик сохранен как: backtest_2020.png")
 
 if __name__ == "__main__":
     main()

@@ -26,6 +26,35 @@ def backtest(df, initial_balance, risk_per_trade, params, commission_rate=0.001)
         current = df.iloc[i]
         prev = df.iloc[i-1]
         
+        
+        # ОТКРЫТИЕ позиции (если на предыдущей свече был сигнал)
+        # if prev['signal'] == 1 and position == 0 and balance > 0:
+        if current['signal'] == 1 and position == 0 and balance > 0:
+            # ВХОД по цене ОТКРЫТИЯ текущей свечи (как в статье: next_bar["open"])
+            entry_price = current['open']
+            
+            # Расчет размера позиции (фиксированный % от баланса)
+            # position_value = balance * risk_per_trade
+            position_value = balance
+            
+            # Проверяем, что хватает средств
+            if position_value > 0 and entry_price > 0:
+                position_size = position_value / entry_price
+                
+                # Минимальная проверка размера сделки
+                # min_trade_value = 10
+                # if position_size * entry_price >= min_trade_value:
+                if position_size:
+                    position = position_size
+                    
+                    # Комиссия за открытие
+                    commission_open = abs(position * entry_price) * commission_rate
+                    if commission_open < balance:
+                        balance -= commission_open
+                        total_commission += commission_open
+                    else:
+                        position = 0  # Не хватает на комиссию
+    
         # ЗАКРЫТИЕ позиции (если есть открытая позиция)
         if position != 0:
             # Закрываем по цене закрытия текущей свечи (как в статье)
@@ -52,32 +81,6 @@ def backtest(df, initial_balance, risk_per_trade, params, commission_rate=0.001)
             
             # Закрываем позицию
             position = 0
-        
-        # ОТКРЫТИЕ позиции (если на предыдущей свече был сигнал)
-        if prev['signal'] == 1 and position == 0 and balance > 0:
-            # ВХОД по цене ОТКРЫТИЯ текущей свечи (как в статье: next_bar["open"])
-            entry_price = current['open']
-            
-            # Расчет размера позиции (фиксированный % от баланса)
-            position_value = balance * risk_per_trade
-            
-            # Проверяем, что хватает средств
-            if position_value > 0 and entry_price > 0:
-                position_size = position_value / entry_price
-                
-                # Минимальная проверка размера сделки
-                min_trade_value = 10
-                if position_size * entry_price >= min_trade_value:
-                    position = position_size
-                    
-                    # Комиссия за открытие
-                    commission_open = abs(position * entry_price) * commission_rate
-                    if commission_open < balance:
-                        balance -= commission_open
-                        total_commission += commission_open
-                    else:
-                        position = 0  # Не хватает на комиссию
-    
     # Расчет результатов стратегии
     strategy_profit_pct = (balance - initial_balance) / initial_balance * 100
     strategy_profit_usd = balance - initial_balance
